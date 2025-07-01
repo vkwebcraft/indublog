@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -35,20 +34,20 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
-          <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
             <Pen className="w-6 h-6 text-white" />
           </div>
-          <span className="text-2xl font-bold text-slate-800">BlogHub</span>
+          <span className="text-2xl font-bold text-slate-800">IndubLog</span>
         </Link>
 
         <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold text-slate-800">
-              {isLogin ? "Welcome back" : "Join BlogHub"}
+              {isLogin ? "Welcome back" : "Join IndubLog"}
             </CardTitle>
             <p className="text-slate-600">
               {isLogin 
@@ -153,7 +152,7 @@ const Auth = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-white"
               >
                 {isLogin ? "Sign In" : "Create Account"}
               </Button>
@@ -161,7 +160,7 @@ const Auth = () => {
 
             {isLogin && (
               <div className="text-center">
-                <Link to="/forgot-password" className="text-sm text-emerald-600 hover:text-emerald-700">
+                <Link to="/forgot-password" className="text-sm text-primary hover:text-primary/80">
                   Forgot your password?
                 </Link>
               </div>
@@ -171,7 +170,7 @@ const Auth = () => {
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-emerald-600 hover:text-emerald-700 font-medium"
+                className="text-primary hover:text-primary/80 font-medium"
               >
                 {isLogin ? "Sign up" : "Sign in"}
               </button>
@@ -181,11 +180,11 @@ const Auth = () => {
 
         <p className="text-center text-xs text-slate-500 mt-8">
           By continuing, you agree to our{" "}
-          <Link to="/terms" className="text-emerald-600 hover:text-emerald-700">
+          <Link to="/terms" className="text-primary hover:text-primary/80">
             Terms of Service
           </Link>{" "}
           and{" "}
-          <Link to="/privacy" className="text-emerald-600 hover:text-emerald-700">
+          <Link to="/privacy" className="text-primary hover:text-primary/80">
             Privacy Policy
           </Link>
         </p>

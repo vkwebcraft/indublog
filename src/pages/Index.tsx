@@ -3,10 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, Heart, MessageSquare, Calendar, User, Tag } from "lucide-react";
+import { Search } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { BlogCard } from "@/components/BlogCard";
 import { CategorySidebar } from "@/components/CategorySidebar";
@@ -104,14 +101,14 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5">
       <Navigation />
       
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-slate-800 mb-6 leading-tight">
-            Stories that <span className="text-emerald-600">inspire</span>.
+            Stories that <span className="text-primary">inspire</span>.
           </h1>
           <h2 className="text-2xl md:text-3xl text-slate-600 mb-8 font-light">
             Words that matter.
@@ -122,7 +119,7 @@ const Index = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <Link to="/write">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg">
                 Start Writing
               </Button>
             </Link>
@@ -141,7 +138,7 @@ const Index = () => {
               placeholder="Search stories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-3 w-full border-slate-200 focus:border-emerald-500 rounded-full"
+              className="pl-10 pr-4 py-3 w-full border-slate-200 focus:border-primary rounded-full"
             />
           </div>
         </div>
@@ -155,7 +152,7 @@ const Index = () => {
             {/* Featured Posts */}
             <section>
               <h2 className="text-3xl font-bold text-slate-800 mb-8 flex items-center">
-                <div className="w-1 h-8 bg-emerald-600 rounded-full mr-4"></div>
+                <div className="w-1 h-8 bg-primary rounded-full mr-4"></div>
                 Featured Stories
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -168,7 +165,7 @@ const Index = () => {
             {/* Latest Posts */}
             <section>
               <h2 className="text-3xl font-bold text-slate-800 mb-8 flex items-center">
-                <div className="w-1 h-8 bg-emerald-600 rounded-full mr-4"></div>
+                <div className="w-1 h-8 bg-primary rounded-full mr-4"></div>
                 Latest Stories
               </h2>
               <div className="space-y-6">

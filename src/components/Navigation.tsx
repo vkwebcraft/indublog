@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { User, Pen, Search, Menu, X } from "lucide-react";
+import { User, Pen, Search, Menu, X, Settings } from "lucide-react";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock auth state
+  const [isAdmin, setIsAdmin] = useState(false); // Mock admin state
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -24,21 +25,21 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Pen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-800">BlogHub</span>
+            <span className="text-xl font-bold text-slate-800">IndubLog</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/explore" className="text-slate-600 hover:text-emerald-600 transition-colors">
+            <Link to="/explore" className="text-slate-600 hover:text-primary transition-colors">
               Explore
             </Link>
-            <Link to="/categories" className="text-slate-600 hover:text-emerald-600 transition-colors">
+            <Link to="/categories" className="text-slate-600 hover:text-primary transition-colors">
               Categories
             </Link>
-            <Link to="/authors" className="text-slate-600 hover:text-emerald-600 transition-colors">
+            <Link to="/authors" className="text-slate-600 hover:text-primary transition-colors">
               Authors
             </Link>
           </div>
@@ -48,7 +49,7 @@ export const Navigation = () => {
             {isLoggedIn ? (
               <>
                 <Link to="/write">
-                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-emerald-600">
+                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary">
                     <Pen className="w-4 h-4 mr-2" />
                     Write
                   </Button>
@@ -64,11 +65,16 @@ export const Navigation = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuItem asChild>
-                      <Link to="/profile">Your Profile</Link>
+                      <Link to="/dashboard">Your Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin">Admin Panel</Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem asChild>
                       <Link to="/settings">Settings</Link>
                     </DropdownMenuItem>
@@ -82,12 +88,12 @@ export const Navigation = () => {
             ) : (
               <>
                 <Link to="/auth">
-                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-emerald-600">
+                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary">
                     Sign In
                   </Button>
                 </Link>
                 <Link to="/auth">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
                     Get Started
                   </Button>
                 </Link>
@@ -111,21 +117,21 @@ export const Navigation = () => {
           <div className="md:hidden border-t border-slate-200 py-4 space-y-4">
             <Link
               to="/explore"
-              className="block text-slate-600 hover:text-emerald-600 transition-colors"
+              className="block text-slate-600 hover:text-primary transition-colors"
               onClick={toggleMenu}
             >
               Explore
             </Link>
             <Link
               to="/categories"
-              className="block text-slate-600 hover:text-emerald-600 transition-colors"
+              className="block text-slate-600 hover:text-primary transition-colors"
               onClick={toggleMenu}
             >
               Categories
             </Link>
             <Link
               to="/authors"
-              className="block text-slate-600 hover:text-emerald-600 transition-colors"
+              className="block text-slate-600 hover:text-primary transition-colors"
               onClick={toggleMenu}
             >
               Authors
@@ -139,12 +145,20 @@ export const Navigation = () => {
                       Write
                     </Button>
                   </Link>
-                  <Link to="/profile" onClick={toggleMenu}>
+                  <Link to="/dashboard" onClick={toggleMenu}>
                     <Button variant="ghost" className="w-full justify-start">
                       <User className="w-4 h-4 mr-2" />
                       Profile
                     </Button>
                   </Link>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={toggleMenu}>
+                      <Button variant="ghost" className="w-full justify-start">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Admin Panel
+                      </Button>
+                    </Link>
+                  )}
                 </>
               ) : (
                 <>
@@ -154,7 +168,7 @@ export const Navigation = () => {
                     </Button>
                   </Link>
                   <Link to="/auth" onClick={toggleMenu}>
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    <Button className="w-full bg-primary hover:bg-primary/90">
                       Get Started
                     </Button>
                   </Link>

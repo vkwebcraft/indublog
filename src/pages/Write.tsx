@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,10 +20,11 @@ const Write = () => {
   });
   const [currentTag, setCurrentTag] = useState("");
   const [isPreview, setIsPreview] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Mock auth check
 
   const categories = [
     "Technology",
-    "Design",
+    "Design", 
     "Lifestyle",
     "Business",
     "Health",
@@ -32,6 +32,23 @@ const Write = () => {
     "Food",
     "Education"
   ];
+
+  // Redirect to auth if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5 flex items-center justify-center px-4">
+        <Card className="w-full max-w-md text-center p-8">
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Authentication Required</h2>
+          <p className="text-slate-600 mb-6">Please sign in to start writing your story.</p>
+          <Link to="/auth">
+            <Button className="bg-primary hover:bg-primary/90">
+              Sign In to Continue
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -83,7 +100,7 @@ const Write = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 py-4">
@@ -115,7 +132,7 @@ const Write = () => {
               </Button>
               <Button
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-primary hover:bg-primary/90"
                 onClick={handlePublish}
               >
                 Publish
@@ -240,7 +257,7 @@ const Write = () => {
                 placeholder="Tell your story... Use Markdown for formatting."
                 value={formData.content}
                 onChange={handleInputChange}
-                className="min-h-[500px] text-lg leading-relaxed border-slate-200 focus:border-emerald-500 bg-white/70 backdrop-blur-sm"
+                className="min-h-[500px] text-lg leading-relaxed border-slate-200 focus:border-primary bg-white/70 backdrop-blur-sm"
               />
               <p className="text-sm text-slate-500 mt-2">
                 You can use Markdown formatting. **Bold**, *italic*, [links](url), and more.
@@ -263,7 +280,7 @@ const Write = () => {
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 {formData.category && (
-                  <Badge className="bg-emerald-100 text-emerald-700">
+                  <Badge className="bg-primary/10 text-primary">
                     {formData.category}
                   </Badge>
                 )}

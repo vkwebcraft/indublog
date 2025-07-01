@@ -1,18 +1,31 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, MessageSquare, Share2, Calendar, Clock, ArrowLeft, Send } from "lucide-react";
+import { 
+  Heart, 
+  MessageSquare, 
+  Share2, 
+  Calendar, 
+  Clock, 
+  ArrowLeft, 
+  Send,
+  Twitter,
+  Linkedin,
+  Link as LinkIcon,
+  Facebook
+} from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 
 const Blog = () => {
   const { id } = useParams();
   const [isLiked, setIsLiked] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   // Mock blog data - in real app, fetch based on ID
   const blog = {
@@ -69,8 +82,46 @@ The future of web development is bright, with exciting innovations on the horizo
     publishedAt: "2024-01-15",
     readTime: "8 min read",
     likes: 124,
-    comments: 18
+    comments: 18,
+    slug: "future-of-web-development-trends-2024"
   };
+
+  // SEO Meta tags
+  useEffect(() => {
+    // Update document title
+    document.title = `${blog.title} | IndubLog`;
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', blog.excerpt);
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+
+    if (ogTitle) ogTitle.setAttribute('content', blog.title);
+    if (ogDescription) ogDescription.setAttribute('content', blog.excerpt);
+    if (ogImage) ogImage.setAttribute('content', blog.coverImage);
+    if (ogUrl) ogUrl.setAttribute('content', window.location.href);
+
+    // Update Twitter Card tags
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+
+    if (twitterTitle) twitterTitle.setAttribute('content', blog.title);
+    if (twitterDescription) twitterDescription.setAttribute('content', blog.excerpt);
+    if (twitterImage) twitterImage.setAttribute('content', blog.coverImage);
+
+    // Cleanup function to reset title when component unmounts
+    return () => {
+      document.title = "IndubLog - Stories that inspire. Words that matter.";
+    };
+  }, [blog]);
 
   const comments = [
     {
@@ -101,19 +152,64 @@ The future of web development is bright, with exciting innovations on the horizo
 
   const handleComment = () => {
     if (newComment.trim()) {
-      // TODO: Submit comment
       console.log("New comment:", newComment);
       setNewComment("");
     }
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    // TODO: Show toast notification
+  const shareUrl = window.location.href;
+  const shareText = `${blog.title} - ${blog.excerpt}`;
+
+  const handleShareTwitter = () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, '_blank', 'width=600,height=400');
+  };
+
+  const handleShareLinkedIn = () => {
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, '_blank', 'width=600,height=400');
+  };
+
+  const handleShareFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    window.open(url, '_blank', 'width=600,height=400');
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert('Link copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5">
+      {/* SEO Schema Markup */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": blog.title,
+            "description": blog.excerpt,
+            "image": blog.coverImage,
+            "author": {
+              "@type": "Person",
+              "name": blog.author.name
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "IndubLog"
+            },
+            "datePublished": blog.publishedAt,
+            "dateModified": blog.publishedAt
+          })
+        }}
+      />
+
       <Navigation />
       
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -192,10 +288,52 @@ The future of web development is bright, with exciting innovations on the horizo
                 <MessageSquare className="w-4 h-4 mr-2" />
                 {blog.comments}
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleShare} className="text-slate-600">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
+              
+              {/* Share Button with Dropdown */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="text-slate-600"
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share
+                </Button>
+                
+                {showShareMenu && (
+                  <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border z-50 py-2 min-w-[180px]">
+                    <button
+                      onClick={handleShareTwitter}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <Twitter className="w-4 h-4 text-blue-500" />
+                      <span>Share on Twitter</span>
+                    </button>
+                    <button
+                      onClick={handleShareLinkedIn}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <Linkedin className="w-4 h-4 text-blue-600" />
+                      <span>Share on LinkedIn</span>
+                    </button>
+                    <button
+                      onClick={handleShareFacebook}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <Facebook className="w-4 h-4 text-blue-700" />
+                      <span>Share on Facebook</span>
+                    </button>
+                    <button
+                      onClick={handleCopyLink}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <LinkIcon className="w-4 h-4 text-slate-500" />
+                      <span>Copy Link</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </header>
@@ -291,6 +429,14 @@ The future of web development is bright, with exciting innovations on the horizo
           </div>
         </section>
       </div>
+
+      {/* Click outside to close share menu */}
+      {showShareMenu && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowShareMenu(false)}
+        />
+      )}
     </div>
   );
 };

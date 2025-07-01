@@ -1,5 +1,5 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,14 +17,45 @@ import {
   UserX,
   CheckCircle,
   XCircle,
-  AlertTriangle
+  AlertTriangle,
+  Shield,
+  TrendingUp,
+  MessageSquare
 } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data
+  // Check if user is admin (mock check - replace with real auth)
+  useEffect(() => {
+    const checkAdminStatus = () => {
+      // Mock admin check - replace with real authentication
+      const userRole = localStorage.getItem('userRole');
+      setIsAdmin(userRole === 'admin');
+      setLoading(false);
+    };
+    
+    checkAdminStatus();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-slate-600">Checking permissions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/auth" replace />;
+  }
+
   const stats = {
     totalUsers: 1248,
     totalArticles: 3456,
@@ -117,90 +148,146 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5">
-      <Navigation />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-slate-50">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-8 h-8 text-primary" />
+                <h1 className="text-2xl font-bold text-slate-800">IndubLog Admin</h1>
+              </div>
+              <Badge className="bg-primary/10 text-primary border-primary/20">
+                Administrator
+              </Badge>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => window.location.href = '/'}
+            >
+              Back to Site
+            </Button>
+          </div>
+        </div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Admin Panel</h1>
-          <p className="text-slate-600">Manage your IndubLog platform</p>
-        </div>
-
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+        {/* Enhanced Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+          <Card className="border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <Users className="w-8 h-8 text-primary mx-auto mb-2" />
+              <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.totalUsers}</h3>
-              <p className="text-slate-600 text-sm">Users</p>
+              <p className="text-slate-600 text-sm">Total Users</p>
+              <div className="flex items-center justify-center mt-2">
+                <TrendingUp className="w-3 h-3 text-green-500 mr-1" />
+                <span className="text-xs text-green-600">+12% this month</span>
+              </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+          
+          <Card className="border-0 bg-gradient-to-br from-green-50 to-green-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <FileText className="w-8 h-8 text-primary mx-auto mb-2" />
+              <FileText className="w-8 h-8 text-green-600 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.totalArticles}</h3>
               <p className="text-slate-600 text-sm">Articles</p>
+              <div className="flex items-center justify-center mt-2">
+                <TrendingUp className="w-3 h-3 text-green-500 mr-1" />
+                <span className="text-xs text-green-600">+8% this week</span>
+              </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+          
+          <Card className="border-0 bg-gradient-to-br from-purple-50 to-purple-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <Eye className="w-8 h-8 text-primary mx-auto mb-2" />
+              <Eye className="w-8 h-8 text-purple-600 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.totalViews}</h3>
               <p className="text-slate-600 text-sm">Views</p>
+              <div className="flex items-center justify-center mt-2">
+                <TrendingUp className="w-3 h-3 text-green-500 mr-1" />
+                <span className="text-xs text-green-600">+24% today</span>
+              </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+          
+          <Card className="border-0 bg-gradient-to-br from-pink-50 to-pink-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <BarChart3 className="w-8 h-8 text-primary mx-auto mb-2" />
+              <MessageSquare className="w-8 h-8 text-pink-600 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.totalLikes}</h3>
-              <p className="text-slate-600 text-sm">Likes</p>
+              <p className="text-slate-600 text-sm">Engagement</p>
+              <div className="flex items-center justify-center mt-2">
+                <TrendingUp className="w-3 h-3 text-green-500 mr-1" />
+                <span className="text-xs text-green-600">+18% this week</span>
+              </div>
             </CardContent>
           </Card>
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+          
+          <Card className="border-0 bg-gradient-to-br from-orange-50 to-orange-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
               <AlertTriangle className="w-8 h-8 text-orange-500 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.pendingArticles}</h3>
-              <p className="text-slate-600 text-sm">Pending</p>
+              <p className="text-slate-600 text-sm">Pending Review</p>
+              {stats.pendingArticles > 0 && (
+                <div className="mt-2">
+                  <span className="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">
+                    Needs Attention
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
-          <Card className="border-0 bg-white/70 backdrop-blur-sm">
+          
+          <Card className="border-0 bg-gradient-to-br from-red-50 to-red-100/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
               <XCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
               <h3 className="text-2xl font-bold text-slate-800">{stats.reportedContent}</h3>
               <p className="text-slate-600 text-sm">Reports</p>
+              {stats.reportedContent > 0 && (
+                <div className="mt-2">
+                  <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">
+                    Action Required
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
         {/* Admin Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-8">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="articles">Articles</TabsTrigger>
+          <TabsList className="mb-8 bg-white/70 backdrop-blur-sm">
+            <TabsTrigger value="overview">Dashboard</TabsTrigger>
+            <TabsTrigger value="articles">Content</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Recent Articles */}
               <Card className="border-0 bg-white/70 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle>Recent Articles</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="w-5 h-5 text-primary" />
+                    <span>Recent Articles</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {recentArticles.map((article) => (
-                      <div key={article.id} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                      <div key={article.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-slate-100">
                         <div className="flex-1">
-                          <h4 className="font-medium text-slate-800">{article.title}</h4>
-                          <div className="flex items-center space-x-3 text-sm text-slate-600 mt-1">
+                          <h4 className="font-medium text-slate-800 mb-1">{article.title}</h4>
+                          <div className="flex items-center space-x-3 text-sm text-slate-600">
                             <span>by {article.author}</span>
                             <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
                               {article.status}
                             </Badge>
+                            <span className="flex items-center">
+                              <Eye className="w-3 h-3 mr-1" />
+                              {article.views}
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -217,17 +304,19 @@ const Admin = () => {
                 </CardContent>
               </Card>
 
-              {/* Recent Users */}
               <Card className="border-0 bg-white/70 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle>Recent Users</CardTitle>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Users className="w-5 h-5 text-primary" />
+                    <span>Recent Users</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {recentUsers.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                      <div key={user.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-slate-100">
                         <div className="flex items-center space-x-3">
-                          <Avatar className="w-10 h-10">
+                          <Avatar className="w-12 h-12">
                             <AvatarImage src={user.avatar} alt={user.name} />
                             <AvatarFallback>{user.name[0]}</AvatarFallback>
                           </Avatar>
@@ -253,12 +342,15 @@ const Admin = () => {
           <TabsContent value="articles">
             <Card className="border-0 bg-white/70 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Manage Articles</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="w-5 h-5 text-primary" />
+                  <span>Content Management</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {recentArticles.map((article) => (
-                    <div key={article.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg">
+                    <div key={article.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-slate-100">
                       <div className="flex-1">
                         <h3 className="font-semibold text-slate-800 mb-1">{article.title}</h3>
                         <div className="flex items-center space-x-4 text-sm text-slate-600">
@@ -312,12 +404,15 @@ const Admin = () => {
           <TabsContent value="users">
             <Card className="border-0 bg-white/70 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Manage Users</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <Users className="w-5 h-5 text-primary" />
+                  <span>User Management</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {recentUsers.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg">
+                    <div key={user.id} className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-slate-100">
                       <div className="flex items-center space-x-4">
                         <Avatar className="w-12 h-12">
                           <AvatarImage src={user.avatar} alt={user.name} />
@@ -372,42 +467,94 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="categories">
-            <Card className="border-0 bg-white/70 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Manage Categories</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-600 mb-4">Category management functionality coming soon...</p>
-                <Button className="bg-primary hover:bg-primary/90">
-                  Add New Category
-                </Button>
-              </CardContent>
-            </Card>
+          <TabsContent value="analytics">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="border-0 bg-white/70 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                    <span>Platform Analytics</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Total Views</span>
+                      <span className="font-bold text-primary">{stats.totalViews}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Total Engagement</span>
+                      <span className="font-bold text-primary">{stats.totalLikes}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Published Articles</span>
+                      <span className="font-bold text-primary">{stats.totalArticles}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 bg-white/70 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                    <span>Growth Metrics</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Active Users</span>
+                      <span className="font-bold text-primary">{stats.totalUsers}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Monthly Growth</span>
+                      <span className="font-bold text-green-600">+12%</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="text-slate-600">Content Quality</span>
+                      <span className="font-bold text-primary">98.2%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="settings">
             <Card className="border-0 bg-white/70 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Platform Settings</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <Settings className="w-5 h-5 text-primary" />
+                  <span>Platform Settings</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-2">General Settings</h3>
-                    <p className="text-slate-600 mb-4">Configure platform-wide settings and preferences.</p>
+                  <div className="p-4 bg-slate-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Content Moderation</h3>
+                    <p className="text-slate-600 mb-4">Configure automatic content filtering and approval workflows.</p>
                     <Button variant="outline">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Configure Settings
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Configure Moderation
                     </Button>
                   </div>
                   
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Content Moderation</h3>
-                    <p className="text-slate-600 mb-4">Set up automated content filtering and moderation rules.</p>
+                  <div className="p-4 bg-slate-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">User Permissions</h3>
+                    <p className="text-slate-600 mb-4">Manage user roles and access levels across the platform.</p>
                     <Button variant="outline">
-                      <AlertTriangle className="w-4 h-4 mr-2" />
-                      Moderation Rules
+                      <UserCheck className="w-4 h-4 mr-2" />
+                      Manage Roles
+                    </Button>
+                  </div>
+
+                  <div className="p-4 bg-slate-50 rounded-lg">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">SEO & Analytics</h3>
+                    <p className="text-slate-600 mb-4">Configure SEO settings and integrate analytics platforms.</p>
+                    <Button variant="outline">
+                      <BarChart3 className="w-4 h-4 mr-2" />
+                      SEO Settings
                     </Button>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Code, Palette, Heart, Briefcase, Plane, Camera, BookOpen, Utensils, ArrowRight } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
 const Categories = () => {
   const categories = [
@@ -206,6 +207,8 @@ const Categories = () => {
           </div>
         </section>
       </div>
+      
+      <Footer />
     </div>
   );
 };

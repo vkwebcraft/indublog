@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -11,13 +11,17 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { User, Pen, Search, Menu, X, Settings } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock auth state
   const [isAdmin, setIsAdmin] = useState(false); // Mock admin state
+  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const isActiveLink = (path: string) => location.pathname === path;
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -33,13 +37,37 @@ export const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/explore" className="text-slate-600 hover:text-primary transition-colors">
+            <Link 
+              to="/explore" 
+              className={cn(
+                "transition-colors",
+                isActiveLink("/explore") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
+            >
               Explore
             </Link>
-            <Link to="/categories" className="text-slate-600 hover:text-primary transition-colors">
+            <Link 
+              to="/categories" 
+              className={cn(
+                "transition-colors",
+                isActiveLink("/categories") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
+            >
               Categories
             </Link>
-            <Link to="/authors" className="text-slate-600 hover:text-primary transition-colors">
+            <Link 
+              to="/authors" 
+              className={cn(
+                "transition-colors",
+                isActiveLink("/authors") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
+            >
               Authors
             </Link>
           </div>
@@ -117,21 +145,36 @@ export const Navigation = () => {
           <div className="md:hidden border-t border-slate-200 py-4 space-y-4">
             <Link
               to="/explore"
-              className="block text-slate-600 hover:text-primary transition-colors"
+              className={cn(
+                "block transition-colors",
+                isActiveLink("/explore") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
               onClick={toggleMenu}
             >
               Explore
             </Link>
             <Link
               to="/categories"
-              className="block text-slate-600 hover:text-primary transition-colors"
+              className={cn(
+                "block transition-colors",
+                isActiveLink("/categories") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
               onClick={toggleMenu}
             >
               Categories
             </Link>
             <Link
               to="/authors"
-              className="block text-slate-600 hover:text-primary transition-colors"
+              className={cn(
+                "block transition-colors",
+                isActiveLink("/authors") 
+                  ? "text-primary font-medium" 
+                  : "text-slate-600 hover:text-primary"
+              )}
               onClick={toggleMenu}
             >
               Authors

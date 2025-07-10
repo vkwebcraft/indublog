@@ -14,6 +14,7 @@ import Authors from "./pages/Authors";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Newsletter from "./pages/Newsletter";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/newsletter" element={<Newsletter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
